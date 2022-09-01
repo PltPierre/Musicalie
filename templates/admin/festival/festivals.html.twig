@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} Admin - Festivals{% endblock %}
+
+{% block navBarTitle %}MUSICALIE{% endblock %}
+{% block FestivalsAdminActive %}active{% endblock %}
+
+{% block contenu %}
+
+    <section class="row d-flex justify-content-center mt-5 w-100">
+        <div class="row d-flex justify-content-center w-50">
+            <div class="w-100 d-flex justify-content-center">
+                <h2 class="mx-auto">LES FESTIVALS</h2>
+            </div>
+            {% if festivals is empty %}
+                <br>
+                <div class="container">
+                    <h1 class="me-2">IL N'Y A PAS DE FESTIVALS DISPONIBLE</h1>
+                </div>
+            {% else %}
+                <table class="table table-striped mt-3">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Département</th>
+                        <th scope="col">Nombre d'artistes</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% set counter = 1 %}
+                    {% for festival in festivals %}
+                        <tr>
+                            <th scope="row">{{ counter }}</th>
+                            <td>{{ festival.nom }}</td>
+                            <td>{{ festival.departement.num~" - "~festival.departement.nom }}</td>
+                            <td>{{ festival.artistes|length }}</td>
+                            <td>{{ festival.date | date("d/m/Y") }}</td>
+                            <td>
+                                <a class="btn" href="{{ path('app_admin_festival_supprimer', {'id': festival.id}) }}"
+                                   onclick="return confirm('Etes-vous sur de vouloir supprimer cette mémoire ?')"><i
+                                            class="fa-solid fa-trash"></i></a>
+                                <a class="btn" href="{{ path('app_admin_festival_modifier', {'id': festival.id}) }}"><i
+                                            class="fa-solid fa-pen-to-square"></i></a>
+                            </td>
+                        </tr>
+                        {% set counter = counter+1 %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+
+            <a href="{{ path('app_admin_festival_ajouter')}}" class="btn btn-primary mt-3 mb-3 w-25">Ajouter un festival</a>
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success mt-5">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </section>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+{% block navBarTitle %}MUSICALIE{% endblock %}
+{% block accueilActive %}active{% endblock %}
+
+{% block contenu %}
+    <section class="mx-auto mt-4" style="height: 75vh">
+        <div class="row row-cols-1 row-cols-md-3 mx-auto mt-2 w-75">
+            {% for festival in festivals %}
+                <div class="col mb-2">
+                    <div class="card text-center" style="width: 18rem">
+                        <img src="{{ asset('uploads/images/'~festival.affiche) }}" class="card-img-top img-fluid w-100"
+                             id="{{ 'img'~festival.id }}" alt="..." style="min-height: 50%;max-height: 50%">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ festival.nom }}</h5>
+                            <i><span style="font-size: 0.7rem">{{ festival.lieu }} ({{ festival.departement.num }}) </span></i>-
+                            <i><span style="font-size: 0.7rem">{{ festival.date|date("d/m/Y") }}</span></i>
+                            <a href="{{ path('app_departement_festival', {'idDep': festival.departement.num, 'idFest':festival.id}) }}" class="btn btn-primary mt-2">VOIR INFORMATIONS</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row" style="width: 95%; margin-top: 50px; margin-left: 0; margin-right: 0">
+            <div class="btn-group">
+                {% for departement in departements|slice(0,6) %}
+                    <a href="{{ path('app_departement', {'id': departement.num}) }}"
+                       class="btn btn-outline-dark">{{ departement.nom }} ({{ departement.num }})</a>
+                {% endfor %}
+            </div>
+
+            <div class="w-100 mb-3"></div>
+            <div class="btn-group">
+                {% for departement in departements|slice(6,12) %}
+                    <a href="{{ path('app_departement', {'id': departement.num}) }}"
+                       class="btn btn-outline-dark">{{ departement.nom }} ({{ departement.num }})</a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} festivals - {{ departement.nom }} {% endblock %}
+{% block navBarTitle %}MUSICALIE{% endblock %}
+
+{% block returnDepartement %}
+    <div>
+        <a class="nav-link" href="{{ path('app_departement', {'id': departement.num}) }}"><i class="fa-solid fa-arrow-left-long"style="font-size:2.5rem;"></i></a>
+    </div>
+{% endblock %}
+
+{% block contenu %}
+    <style>
+        body{
+            overflow-x: hidden;
+        }
+    </style>
+    <section class="row d-flex justify-content-center">
+        <div class="row d-flex justify-content-center w-50">
+            <div class="w-100 d-flex justify-content-center mt-3">
+                <h1>{{ festival.nom }}</h1>
+            </div>
+            <div class="w-100 d-flex justify-content-center mt-5">
+                <img src="{{ asset('uploads/images/'~festival.affiche) }}" class="img-fluid rounded mx-auto d-block" style="max-width: 25%">
+            </div>
+
+            <div class="row">
+                <div class="w-50 col d-flex justify-content-center mt-5">
+                    <p>Ce festival ce déroule dans la ville de <strong>{{festival.lieu}}</strong> en <i>{{ festival.departement.nom~" ("~festival.departement.num~")" }}</i></p>
+                </div>
+                <div class="w-100"></div>
+                <div class="w-50 col d-flex justify-content-center mt-2">
+                    <p>Le {{ dateFormat }}</p>
+                </div>
+
+                <div class="w-100"></div>
+
+                <div class="w-100 d-flex justify-content-center">
+                    <h3>LES ARTISTES</h3>
+                </div>
+                <div class="w-100"></div>
+                <div class="w-50 col d-flex justify-content-center mt-2">
+                    <ul class="list-group">
+                        {% for artiste in festival.artistes|slice(0,festival.artistes|length/2) %}
+                            <li class="list-group-item">{{ artiste.nomScene }}</li>
+                        {% endfor %}
+                    </ul>
+                    <ul class="list-group">
+                        {% for artiste in festival.artistes|slice(festival.artistes|length/2,festival.artistes|length) %}
+                            <li class="list-group-item">{{ artiste.nomScene }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+{% endblock %}

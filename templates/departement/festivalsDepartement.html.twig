@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Festivals - {{ departement.nom }}{% endblock %}
+{% block navBarTitle %}MUSICALIE{% endblock %}
+{% block accueilActive %}active{% endblock %}
+
+{% block contenu %}
+    <style>
+        .imgPointer:hover{
+            cursor: pointer;
+        }
+    </style>
+    <section class="mx-auto mt-4" style="height: 75vh">
+        <div class="w-100 d-flex justify-content-center">
+            <h1 class="mx-auto">{{ departement.nom|upper }}</h1>
+        </div>
+        <div class="row row-cols-1 row-cols-md-{% if festivals|length <4 %}{{ festivals|length }}{% else%}4{% endif%} mx-auto mt-2 w-100">
+            {% for festival in festivals %}
+                <div class="col mb-2 mt-2 d-flex justify-content-center">
+                    <div class="card text-center" style="width: 18rem">
+                        <img src="{{ asset('uploads/images/'~festival.affiche) }}" class="card-img-top img-fluid h-50 imgPointer" id="{{ 'img'~festival.id }}" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ festival.nom }}</h5>
+                            <i><span style="font-size: 0.7rem">{{ festival.lieu }} </span></i>-
+                            <i><span style="font-size: 0.7rem">{{ festival.date|date("d/m/Y") }}</span></i>
+                            <a href="{{ path('app_departement_festival', {'idDep': departement.num, 'idFest':festival.id}) }}" class="btn btn-primary mt-2">VOIR INFORMATIONS</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    {% if app.request.get('_route') == "app_admin_festival_ajouter" %}
+        {{ parent() }} Admin - Ajouter artiste
+    {% else %}
+        {{ parent() }} Admin - Modifier artiste
+    {% endif %}
+{% endblock %}
+
+{% block ArtisteAdminActive %}active{% endblock %}
+
+{% block contenu %}
+
+    <section class="row d-flex justify-content-center mt-5 w-100">
+        <div class="mx-auto my-auto" style="width: 50%">
+            {{ form_start(form) }}
+            <div class="row">
+                <div class="col">{{ form_row(form.nomScene) }}</div>
+                <div class="col">{{ form_row(form.style) }}</div>
+            </div>
+            {{ form_row(form.festivals) }}
+
+            <h3 class="mt-4">Les instruments</h3>
+
+            <div class="d-flex travauxBloc"
+                 data-index="{{ form.instruments|length > 0 ? form.instruments|last.vars.name + 1 : 0 }}"
+                 data-prototype="{{ form_widget(form.instruments.vars.prototype)|e('html_attr') }}"
+            >{{ form_label(form.instruments) }}</div>
+            <button type="button" class="add_item_link btn btn-secondary btn-sm mt-3"
+                    data-collection-holder-class="travauxBloc">Ajouter un instruments
+            </button>
+
+            <div class="row mt-2">
+                {% for instruments in form.instruments %}
+
+                    <div class="col-4">
+                        {{ form_widget(instruments) }}
+                        <button class="btn btn-sm btn-danger" onclick="return this.parentNode.remove()">supprimer
+                        </button>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+            {{ form_rest(form) }}
+
+
+            <div class="w-100 col d-flex justify-content-center mt-2">
+                {% if app.request.get('_route') == "app_admin_artiste_ajouter" %}
+                    <button class="btn btn-success" type="submit">Ajouter</button>
+                {% else %}
+                    <button class="btn btn-success" type="submit" onclick="return confirm('Etes-vous sur de vouloir modifier cette mémoire ?')">Modifier</button>
+                {% endif %}
+                <a href="{{ path('app_admin_artiste') }}" class="btn btn-danger ms-5"><i class="fa-solid fa-arrow-left"></i> Retour</a>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+
+    </section>
+
+{% endblock %}
