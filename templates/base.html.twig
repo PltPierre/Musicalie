@@ -1,19 +1,103 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Musicalie - {% endblock %}</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"
+            integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.1.0/js/tom-select.complete.js"
+            integrity="sha512-9oUnQDId23tMBszYPJt4R8HlVmSkzDVcz6qezjHPwWLyr1tOv4knhNnUaSXRolN4WxJBCeI52tX5hA9SHgBilQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.1.0/css/tom-select.bootstrap5.min.css"
+          integrity="sha512-K82RLtN4b8qmdMqzU7N5rs1jR1+oOGStg9wRgDUHKOzpJ65rhPdjvzF79TCo7xlpa/dnx2cfFwx7++XrWvs36Q=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+          integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<script src="{{ asset('scripts/all-pages.js') }}" defer></script>
+<script src="{{ asset('scripts/app.js') }}" defer></script>
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
+<nav class="navbar py-2" style="background-color: rgba(205,205,205,0.35);">
+    <div class="container-fluid">
+        {% block returnDepartement %}
         {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+        <a class="navbar-brand mx-auto large" href="{{ path('app_festival') }}"><span
+                    class="h1">{% block navBarTitle %}{% endblock %}</span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                aria-controls="offcanvasNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item">
+                        <a class="nav-link {% block accueilActive %}{% endblock %}" aria-current="page"
+                           href="{{ path('app_festival') }}"><i class="fa-solid fa-house"></i> Accueil</a>
+                    </li>
+                    {% if app.user %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_logout') }}"><i class="fa fa-sign-out"></i> Se
+                                déconnecter</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link {% block LoginActive %}{% endblock %}" href="{{ path('app_login') }}"><i
+                                        class="fa-solid fa-arrow-right-to-bracket"></i> Se connecter</a>
+                        </li>
+                    {% endif %}
+
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item" style="padding-top: 0.5rem">
+                            <span style="color: #0000008c;"><i class="fa-solid fa-lock"></i> Admin</span>
+                            <ul style="list-style: none">
+                                <li class="nav-item">
+                                    <a class="nav-link {% block FestivalAdminActive %}{% endblock %}"
+                                       href="{{ path('app_admin_festival') }}"><i class="fa-solid fa-lock"></i>
+                                        Festivals</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {% block ArtisteAdminActive %}{% endblock %}"
+                                       href="{{ path('app_admin_artiste') }}"><i class="fa-solid fa-lock"></i> Artistes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {% block DepartementAdminActive %}{% endblock %}"
+                                       href="{{ path('app_admin_departement') }}"><i class="fa-solid fa-lock"></i>
+                                        Départements</a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if app.user %}
+                        <li class="nav-item w-100 ms-0 ps-0"
+                            style="position:fixed;bottom: 0; border-top: 1px solid grey">
+                            <a class="nav-link" href="">
+                                <img class="img-profile rounded-circle" width="100px" height="100px"
+                                     src="{{ asset('uploads/images/'~app.user.photo) }}">
+                                <span>{{ app.user.firstname~" "~app.user.lastname }}</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+{% block contenu %}{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+        crossorigin="anonymous"></script>
+</body>
 </html>

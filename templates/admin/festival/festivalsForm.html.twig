@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    {% if app.request.get('_route') == "app_admin_festival_ajouter" %}
+        {{ parent() }} Admin - Ajouter festival
+    {% else %}
+        {{ parent() }} Admin - Modifier festival
+    {% endif %}
+{% endblock %}
+
+{% block FestivalAdminActive %}active{% endblock %}
+
+{% block contenu %}
+
+    <section class="row d-flex justify-content-center mt-5 w-100">
+
+        <div class="mx-auto my-auto" style="width: 50%">
+            {{ form_start(form) }}
+            <div class="row">
+                <div class="col">{{ form_row(form.nom) }}</div>
+                <div class="col">{{ form_row(form.lieu) }}</div>
+            </div>
+            <div class="row">
+                <div class="col">{{ form_row(form.departement) }}</div>
+                <div class="col">{{ form_row(form.date) }}</div>
+            </div>
+            {{ form_rest(form) }}
+            <div class="w-100 col d-flex justify-content-center">
+                {% if app.request.get('_route') == "app_admin_festival_ajouter" %}
+                    <button class="btn btn-success" type="submit">Ajouter</button>
+                {% else %}
+                    <button class="btn btn-success" type="submit" onclick="return confirm('Etes-vous sur de vouloir modifier cette mémoire ?')">Modifier</button>
+                {% endif %}
+                <a href="{{ path('app_admin_festival') }}" class="btn btn-danger ms-5"><i class="fa-solid fa-arrow-left"></i> Retour</a>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+
+    </section>
+
+{% endblock %}
